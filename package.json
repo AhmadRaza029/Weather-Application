@@ -1,0 +1,27 @@
+{
+  "name": "weather-application",
+  "version": "1.0.0",
+  "description": "A responsive web application that delivers real-time, location-based weather updates",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "weather",
+    "forecast",
+    "geolocation",
+    "alerts",
+    "responsive",
+    "bootstrap"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

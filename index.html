@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Application</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for data visualization -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.css">
+    <!-- Leaflet CSS for maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container-fluid p-0">
+        <!-- Header Section -->
+        <header class="bg-primary text-white p-3 shadow-sm">
+            <div class="container">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h1 class="mb-0"><i class="fas fa-cloud-sun me-2"></i>Weather App</h1>
+                    <div class="d-flex align-items-center">
+                        <!-- User Account Section -->
+                        <div class="dropdown me-3">
+                            <button class="btn btn-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user me-1"></i> <span id="userDisplayName">Guest</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><h6 class="dropdown-header">Account</h6></li>
+                                <li><a class="dropdown-item" href="#" id="loginBtn"><i class="fas fa-sign-in-alt me-2"></i>Login</a></li>
+                                <li><a class="dropdown-item" href="#" id="registerBtn"><i class="fas fa-user-plus me-2"></i>Register</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><h6 class="dropdown-header">Saved Locations</h6></li>
+                                <li><div class="dropdown-item" id="savedLocationsEmpty"><em>No saved locations</em></div></li>
+                                <div id="savedLocationsList"></div>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                            </ul>
+                        </div>
+                        <!-- Theme Toggle -->
+                        <div class="theme-toggle me-3">
+                            <button id="themeToggleBtn" class="btn btn-light">
+                                <i class="fas fa-moon"></i>
+                            </button>
+                        </div>
+                        <!-- Notification Toggle -->
+                        <div class="notification-toggle">
+                            <button id="notificationBtn" class="btn btn-light">
+                                <i class="fas fa-bell"></i> Enable Alerts
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="container my-4">
+            <!-- Search Section -->
+            <section class="search-section mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <input type="text" id="searchInput" class="form-control" placeholder="Enter city name...">
+                                    <button id="searchBtn" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <button id="currentLocationBtn" class="btn btn-outline-primary w-100">
+                                    <i class="fas fa-map-marker-alt me-2"></i>Use My Location
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Weather Display Section -->
+            <section id="weatherDisplay" class="weather-display mb-4 d-none">
+                <div class="row">
+                    <!-- Current Weather Card -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header bg-primary text-white">
+                                <h3 class="mb-0">Current Weather</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="current-weather">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <h2 id="cityName" class="mb-0 me-2">City Name</h2>
+                                        <span id="countryCode" class="badge bg-secondary">Country</span>
+                                    </div>
+                                    <div class="row align-items-center">
+                                        <div class="col-md-6 text-center">
+                                            <img id="weatherIcon" src="" alt="Weather Icon" class="img-fluid weather-icon mb-2">
+                                            <h4 id="weatherDescription" class="text-capitalize">Weather Description</h4>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h1 id="temperature" class="display-4">--°C</h1>
+                                            <div class="details">
+                                                <p><i class="fas fa-thermometer-half me-2"></i>Feels like: <span id="feelsLike">--°C</span></p>
+                                                <p><i class="fas fa-tint me-2"></i>Humidity: <span id="humidity">--%</span></p>
+                                                <p><i class="fas fa-wind me-2"></i>Wind: <span id="windSpeed">-- m/s</span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer text-muted">
+                                <small>Last updated: <span id="lastUpdated">--</span></small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weather Alerts Card -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header bg-warning text-dark">
+                                <h3 class="mb-0">Weather Alerts</h3>
+                            </div>
+                            <div class="card-body">
+                                <div id="alertsContainer">
+                                    <div class="text-center py-5" id="noAlertsMessage">
+                                        <i class="fas fa-check-circle text-success fa-3x mb-3"></i>
+                                        <h4>No active weather alerts</h4>
+                                        <p class="text-muted">We'll notify you when severe weather is expected</p>
+                                    </div>
+                                    <div id="alertsList" class="d-none">
+                                        <!-- Alerts will be added here dynamically -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="alertsToggle" checked>
+                                    <label class="form-check-label" for="alertsToggle">Receive alerts for this location</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hourly Forecast Section -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">Hourly Forecast</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="hourly-scroll-container">
+                            <div id="hourlyForecastContainer" class="d-flex">
+                                <!-- Hourly forecast items will be added here dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5-Day Forecast Section -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">5-Day Forecast</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="forecastContainer" class="row">
+                            <!-- Forecast items will be added here dynamically -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Weather Maps Section -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3 class="mb-0">Weather Maps</h3>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-light btn-sm map-type-btn" data-map-type="precipitation_new">Precipitation</button>
+                                <button type="button" class="btn btn-light btn-sm map-type-btn" data-map-type="temp_new">Temperature</button>
+                                <button type="button" class="btn btn-light btn-sm map-type-btn" data-map-type="clouds_new">Clouds</button>
+                                <button type="button" class="btn btn-light btn-sm map-type-btn" data-map-type="wind_new">Wind</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="weatherMap" class="weather-map"></div>
+                    </div>
+                </div>
+                
+                <!-- Weather Data Visualization Section -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">Weather Data Visualization</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="card">
+                                    <div class="card-header">Temperature Trend</div>
+                                    <div class="card-body">
+                                        <canvas id="temperatureChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card">
+                                    <div class="card-header">Humidity & Pressure</div>
+                                    <div class="card-body">
+                                        <canvas id="humidityPressureChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Loading Indicator -->
+            <div id="loadingIndicator" class="text-center py-5 d-none">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-3">Fetching weather data...</p>
+            </div>
+
+            <!-- Error Message -->
+            <div id="errorMessage" class="alert alert-danger d-none" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <span id="errorText">Unable to fetch weather data. Please try again.</span>
+            </div>
+
+            <!-- Welcome Message (shown when no weather is displayed) -->
+            <div id="welcomeMessage" class="text-center py-5">
+                <i class="fas fa-cloud-sun fa-5x text-primary mb-4"></i>
+                <h2>Welcome to Weather App</h2>
+                <p class="lead">Get real-time weather updates for any location</p>
+                <p>Search for a city or use your current location to get started</p>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-dark text-white py-4 mt-auto">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-cloud-sun me-2"></i>Weather App</h5>
+                        <p>Real-time weather updates with alerts and forecasts</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <p>Powered by <a href="https://openweathermap.org/" class="text-white" target="_blank">OpenWeather API</a></p>
+                        <p class="mb-0">&copy; 2023 Weather App. All rights reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- User Authentication Modals -->
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="loginEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="loginPassword" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Login</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <p class="w-100 text-center mb-0">Don't have an account? <a href="#" id="switchToRegister">Register</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">Register</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerForm">
+                        <div class="mb-3">
+                            <label for="registerName" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="registerName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerEmail" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="registerEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="registerPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerConfirmPassword" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="registerConfirmPassword" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <p class="w-100 text-center mb-0">Already have an account? <a href="#" id="switchToLogin">Login</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Save Location Modal -->
+    <div class="modal fade" id="saveLocationModal" tabindex="-1" aria-labelledby="saveLocationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="saveLocationModalLabel">Save Location</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Save <span id="saveLocationName"></span> to your favorites?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmSaveLocation">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Leaflet JS for maps -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <!-- Custom JS -->
+    <script src="js/config.js"></script>
+    <script src="js/weather.js"></script>
+    <script src="js/user.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/maps.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

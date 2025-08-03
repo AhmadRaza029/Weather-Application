@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Background Circle -->
+  <circle cx="32" cy="32" r="30" fill="#1e88e5" />
+  
+  <!-- Sun -->
+  <circle cx="32" cy="26" r="12" fill="#ffeb3b" />
+  
+  <!-- Sun Rays -->
+  <line x1="32" y1="8" x2="32" y2="14" stroke="#ffeb3b" stroke-width="3" stroke-linecap="round" />
+  <line x1="32" y1="38" x2="32" y2="44" stroke="#ffeb3b" stroke-width="3" stroke-linecap="round" />
+  <line x1="14" y1="26" x2="20" y2="26" stroke="#ffeb3b" stroke-width="3" stroke-linecap="round" />
+  <line x1="44" y1="26" x2="50" y2="26" stroke="#ffeb3b" stroke-width="3" stroke-linecap="round" />
+  <line x1="19" y1="13" x2="23" y2="17" stroke="#ffeb3b" stroke-width="3" stroke-linecap="round" />
+  <line x1="41" y1="35" x2="45" y2="39" stroke="#ffeb3b" stroke-width="3" stroke-linecap="round" />
+  <line x1="19" y1="39" x2="23" y2="35" stroke="#ffeb3b" stroke-width="3" stroke-linecap="round" />
+  <line x1="41" y1="17" x2="45" y2="13" stroke="#ffeb3b" stroke-width="3" stroke-linecap="round" />
+  
+  <!-- Cloud -->
+  <path d="M46,40 C48.7614,40 51,42.2386 51,45 C51,47.7614 48.7614,50 46,50 L22,50 C17.5817,50 14,46.4183 14,42 C14,37.5817 17.5817,34 22,34 C22.3333,34 22.6667,34 23,34.0834 C24.2361,30.6254 27.3892,28 31,28 C35.4183,28 39,31.5817 39,36 C39,36.6906 38.8917,37.3607 38.7113,38 L46,38 C47.1046,38 48,38.8954 48,40 C48,41.1046 47.1046,42 46,42 L22,42 C19.7909,42 18,43.7909 18,46 C18,48.2091 19.7909,50 22,50 L46,50 C48.2091,50 50,48.2091 50,46 C50,43.7909 48.2091,42 46,42" fill="white" />
+</svg>
